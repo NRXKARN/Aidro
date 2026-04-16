@@ -1,0 +1,9 @@
+runtime: python39
+instance_class: F1
+
+env_variables:
+  GEMINI_API_KEY: "YOUR_PROD_API_KEY"
+
+handlers:
+- url: /.*
+  script: auto

@@ -1,0 +1,201 @@
+.map-view-root {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+
+.map-canvas-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.base-map {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    filter: saturate(0.2) contrast(1.2);
+}
+
+.map-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 2;
+}
+
+.map-marker {
+    position: absolute;
+    z-index: 10;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.map-marker:hover {
+    transform: scale(1.2);
+}
+
+.marker-label {
+    background: rgba(0,0,0,0.8);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+.marker-ping {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid;
+    border-radius: 50%;
+    top: -8px;
+    animation: ping 2s infinite;
+}
+
+.map-marker.critical { color: #ff4d4d; }
+.map-marker.critical .marker-ping { border-color: #ff4d4d; }
+
+.map-marker.warning { color: #f97316; }
+.map-marker.warning .marker-ping { border-color: #f97316; }
+
+.map-marker.stable { color: #10b981; }
+.map-marker.stable .marker-ping { border-color: #10b981; }
+
+@keyframes ping {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.map-ui-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    padding: 2rem;
+}
+
+.map-toolbar {
+    pointer-events: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.tool-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tool-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.tool-btn.active, .tool-btn:hover {
+    background: #00d2ff;
+    color: #000;
+    border-color: #00d2ff;
+}
+
+.map-search input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    width: 250px;
+}
+
+.map-sidebar {
+    pointer-events: auto;
+    position: absolute;
+    top: 100px;
+    right: 2rem;
+    width: 320px;
+    padding: 2rem;
+    height: calc(100vh - 140px);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.risk-score-display {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(0, 210, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 210, 255, 0.1);
+}
+
+.risk-score-display .label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.risk-score-display .value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #00d2ff;
+}
+
+.zone-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.stat label {
+    display: block;
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.btn-deploy {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #00d2ff, #0072ff);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.empty-state {
+    color: #475569;
+    text-align: center;
+    margin-top: 4rem;
+}
