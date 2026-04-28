@@ -4,15 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AIDRO | AI-Driven Disaster Response</title>
+    <link rel="manifest" href="/manifest.json" />
+    <title>AIDRO | Guardian Core</title>
     <meta name="description" content="Intelligent disaster management system using Google Gemini AI for resource optimization.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      window.addEventListener('error', function(e) {
+          var errorDiv = document.createElement('div');
+          errorDiv.style.cssText = 'background:#d93025;color:white;padding:20px;z-index:99999;position:fixed;top:0;left:0;width:100%;font-family:monospace;';
+          errorDiv.innerHTML = '<h3 style="margin:0 0 10px 0;">GLOBAL FATAL ERROR:</h3><pre style="margin:0;">' + (e.error ? e.error.stack : e.message) + '</pre>';
+          document.body.appendChild(errorDiv);
+      }, true); // use capture to catch resource errors too
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <h1 style="text-align:center; margin-top:20vh; font-family:sans-serif;">LOADING AIDRO GUARDIAN... IF YOU SEE THIS, JAVASCRIPT IS FAILING TO START.</h1>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

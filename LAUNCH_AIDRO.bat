@@ -1,17 +1,26 @@
 @echo off
-title Launching AIDRO...
-echo [1/3] Checking environment...
+title AIDRO MISSION ACTIVATION
 cd /d %~dp0
 
-echo [2/3] Starting Backend (FastAPI)...
-start cmd /k "cd backend && pip install -r requirements.txt && python -m uvicorn main:app --reload"
+echo [1/2] INITIALIZING BACKEND...
+if exist "backend\venv\Scripts\python.exe" (
+    start "AIDRO_BACKEND" cmd /k "cd backend && .\venv\Scripts\python main.py"
+) else (
+    echo [WARNING] Virtual environment not detected. Attempting global python...
+    start "AIDRO_BACKEND" cmd /k "cd backend && python main.py"
+)
 
-echo [3/3] Starting Frontend (React)...
-start cmd /k "npm install && npm run dev"
+echo [2/2] INITIALIZING FRONTEND...
+if exist "node_modules\.bin\vite.exe" (
+    start "AIDRO_FRONTEND" cmd /k "npm run dev"
+) else (
+    echo [ERROR] Dependencies missing. Attempting install...
+    start "AIDRO_FRONTEND" cmd /k "npm install && npm run dev"
+)
 
 echo ----------------------------------------------------
-echo AIDRO SHOULD BE LIVE IN A FEW SECONDS!
-echo Dashboard: http://localhost:5173
-echo API: http://localhost:8000
+echo SYSTEM IS BOOTING. PLEASE CHECK THE NEW WINDOWS.
+echo If a window closes immediately, look for errors.
+echo Ready Link: http://localhost:5173
 echo ----------------------------------------------------
 pause

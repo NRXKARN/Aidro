@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://localhost:8000/api";
+import CONFIG from '../config/config';
+
+const API_BASE_URL = CONFIG.API_BASE_URL;
 
 export const ApiService = {
     /**

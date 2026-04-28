@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  --primary: #8b5cf6; /* Electric Violet */
+  --accent: #06b6d4;  /* Neon Cyan */
+  --success: #10b981; 
+  --warning: #fbbf24; 
+  --danger: #ff4d4d;  
+  --bg-deep: #05050a; 
+  --bg-surface: rgba(13, 15, 25, 0.85);
+  --border-dim: rgba(139, 92, 246, 0.1);
+  --border-bright: rgba(139, 92, 246, 0.3);
+  --hud-glow: 0 0 20px rgba(139, 92, 246, 0.15);
+  --font-main: 'Inter', sans-serif;
+  --font-data: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); cursor: crosshair; }
+body { 
+    background: var(--bg-deep); 
+    color: #fff; 
+    height: 100vh; 
+    overflow: hidden; 
+    position: relative;
+}
+
+/* CYBER GRID BACKGROUND */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--border-dim) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-dim) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* HOLOGRAPHIC SCAN LINE */
+body::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.1;
+    animation: scanMove 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanMove { from { top: -2%; } to { top: 102%; } }
+
+/* SENTINEL CHASSIS */
+.horizon-shell {
+  display: flex;
+  height: 100vh;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: radial-gradient(circle at top, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+}
+
+.horizon-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  filter: drop-shadow(var(--hud-glow));
+}
+
+/* TACTICAL NAV HUB */
+.horizon-nav {
+  height: 64px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-text {
+  font-family: var(--font-data);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.nav-tabs { display: flex; gap: 8px; }
+.nav-tabs button {
+  background: transparent; border: none; color: #64748b; 
+  padding: 0.5rem 1rem; font-family: var(--font-data);
+  font-size: 0.7rem; letter-spacing: 0.05em; transition: 0.3s;
+  border-radius: 4px;
+}
+.nav-tabs button:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.nav-tabs button.active { 
+  color: #fff; background: rgba(139, 92, 246, 0.1); 
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+/* HUD TILES: REFRACTIVE GLASS */
+.card-horizon {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  position: relative;
+}
+
+.section-title {
+  font-family: var(--font-data);
+  font-size: 0.6rem; color: #64748b; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+}
+
+/* DATA TELEMETRY */
+.stats-grid-v8 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.stat-item-v8 {
+  padding: 1.5rem;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-item-v8:hover { border-color: var(--primary); box-shadow: var(--hud-glow); transform: scale(1.02); }
+.stat-item-v8 .val { font-size: 1.75rem; font-weight: 800; font-family: var(--font-data); color: #fff; }
+
+/* GEOSPATIAL MAP HUD */
+.map-view-root { 
+    height: 100%; border-radius: 8px; overflow: hidden; 
+    border: 1px solid var(--border-bright); 
+    background: #000; position: relative;
+}
+
+.map-marker { z-index: 100; pointer-events: auto; cursor: pointer; }
+.marker-pin {
+  width: 6px; height: 6px; background: #fff; border-radius: 50%;
+  box-shadow: 0 0 15px #fff;
+}
+
+/* SENTINEL MISSION ACTIONS */
+.sos-btn-v5 {
+    background: transparent; border: 1px solid var(--primary); color: #fff;
+    font-family: var(--font-data); font-size: 0.65rem; font-weight: 700;
+    padding: 0.75rem 1.5rem; letter-spacing: 0.1em;
+    transition: 0.3s;
+    text-shadow: 0 0 5px var(--primary);
+}
+.sos-btn-v5:hover { background: var(--primary); box-shadow: 0 0 25px var(--primary); }
+
+/* HQ PERSISTENT CHAT */
+.guardian-bot-floating { position: fixed; bottom: 2rem; right: 2rem; width: 400px; z-index: 1000; }
+.bot-window {
+  background: var(--bg-surface); backdrop-filter: blur(24px); border: 1px solid var(--primary); border-radius: 12px;
+  overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+.bot-feed { height: 400px; padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+.msg-bubble { 
+    font-size: 0.8rem; line-height: 1.6; padding: 1rem; border-radius: 6px; 
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.msg-row.bot .msg-bubble { background: rgba(139, 92, 246, 0.08); color: #e2e8f0; border-left: 3px solid var(--primary); }
+.msg-row.user .msg-bubble { background: rgba(0,0,0,0.3); color: #fff; align-self: flex-end; font-family: var(--font-data); font-size: 0.75rem; border: 1px solid var(--primary); }
+
+/* GLOBAL DASHBOARD SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+
+/* HUD COMPONENTS */
+.pulse { animation: hudPulse 2.5s ease-in-out infinite; }
+@keyframes hudPulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes ping { 0% { transform: scale(0.2); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+.ping { animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+input, select, textarea {
+    background: rgba(0,0,0,0.6); border: 1px solid var(--border-bright); color: #fff;
+    padding: 0.8rem; font-family: var(--font-data); font-size: 0.8rem; border-radius: 4px;
+}
+input:focus { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.1); outline: none; }

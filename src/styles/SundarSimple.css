@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary: #1a73e8; /* Google Blue */
+  --primary-light: #e8f0fe;
+  --success: #1e8e3e;
+  --warning: #f9ab00;
+  --danger: #d93025;
+  --bg-app: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-main: #202124;
+  --text-muted: #5f6368;
+  --border: #dadce0;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px 0 rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --font-main: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sundar-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.sundar-header {
+  background: var(--bg-card);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+
+.sundar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.sundar-nav {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-app);
+  padding: 4px;
+  border-radius: 100px;
+}
+
+.sundar-nav button {
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 100px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sundar-nav button:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-main);
+}
+
+.sundar-nav button.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
+
+/* Main Content */
+.sundar-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sundar-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sundar-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Typography Overrides */
+h1, h2, h3 {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.heading-display {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+}
+
+.text-sub {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* SOS Floating Action */
+.sundar-sos-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--danger);
+  color: #fff;
+  padding: 1.2rem 2.5rem;
+  border-radius: 100px;
+  border: none;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(217, 48, 37, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.sundar-sos-fab:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 12px 32px rgba(217, 48, 37, 0.5);
+}
+
+/* Status Indicator */
+.status-pill {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-online { background: #e6f4ea; color: #1e8e3e; }
+.status-offline { background: #fce8e6; color: #d93025; }
+
+/* Grid Layouts */
+.sundar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: slideUp 0.5s ease forwards;
+}

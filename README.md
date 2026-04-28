@@ -1,53 +1,53 @@
-# AIDRO - Artificial Intelligence Disaster Resource Optimizer
+# AIDRO MISSION CONTROL // NATIONAL COMMAND CENTER
+**Artificial Intelligence Disaster Response & Optimization Platform**
 
-AIDRO is a state-of-the-art, AI-powered platform designed to revolutionize resources allocation during large-scale emergencies. By combining predictive modeling with real-time NLP analysis from **Google Gemini**, AIDRO provides authorities with the intelligence needed to save lives faster.
-
-## 🚀 Key Features
-
-- **🔮 Disaster Prediction**: Integrated ML structures to identify high-risk zones early.
-- **📍 Real-time SOS Reporting**: A mobile-optimized portal for survivors to submit requests.
-- **🤖 Gemini AI Prioritization**: Uses Google Gemini to extract severity and urgency from free-text reports, generating a 1-100 "Life-Risk Score".
-- **📊 Admin Dashboard**: A premium, data-driven command center for real-time tracking.
-- **🗺️ Tactical Map View**: Interactive GIS mapping with heatmaps and zone analytics.
-
-## ⚙️ Technical Stack
-
-- **Frontend**: React.js 18, Vite, Framer Motion, Lucide Icons.
-- **Styling**: Premium CSS (Glassmorphism, Dark Theme).
-- **AI Engine**: Google Gemini Pro (via `@google/generative-ai`).
-- **Icons**: Lucide React.
-- **Deployment**: Prepared for Cloud (Firebase/Vercel).
-
-## 🛠️ Setup Instructions
-
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd aidro
-   ```
-
-2. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Configure API Keys**:
-   Create a `.env` file in the root:
-   ```env
-   VITE_GEMINI_API_KEY=your_google_gemini_api_key_here
-   ```
-
-4. **Launch Development Server**:
-   ```bash
-   npm run dev
-   ```
-
-## 🧠 AI Simulation Logic
-
-The core logic resides in `src/services/GeminiService.js`. It takes raw text inputs from the SOS page and prompts Gemini Pro to:
-1. Extract the specific emergency type.
-2. Determine the urgency (1-10) and population impact.
-3. Suggest the optimal distribution of food, water, and medical resources.
+AIDRO v9.0 is a production-grade, high-integrity mission control system designed for government-led humanitarian response. It integrates real-time geospatial telemetry with advanced NLP triage logic powered by Google Gemini to optimize life-saving resource allocation during urban and rural disasters.
 
 ---
-*Built for the betterment of humanitarian response.*
+
+## 🏛️ Tactical Capabilities
+
+*   **GEOSPATIAL COMMAND**: Real-time asset tracking and threat visualization with surgical precision.
+*   **AI DISPATCH PROTOCOL**: Multi-tier incident triage using LLM-driven severity assessment (Google Gemini).
+*   **LOGISTICS INTEGRITY**: Secure supply chain audit trails and predictive resource shortage alerts.
+*   **RESILIENT COMMS**: Integrated SMS-fallback protocol for zero-bandwidth survival scenarios.
+*   **RECONSTRUCTION PORTAL**: Automated eligibility estimation for post-disaster government aid (NDRF/SDRF).
+
+## 🛠️ Technical Infrastructure
+
+| Layer | Technology | Service |
+| :--- | :--- | :--- |
+| **Core UI** | React 18 / Vite | Mission Control Shell |
+| **Telemetry** | Chart.js / Lucide | High-Precision Data Viz |
+| **Intelligence** | FastAPI / Gemini Pro | Structured AI Triage Engine |
+| **Storage** | Firebase Firestore | Global Real-time Persistence |
+| **Security** | Pydantic / Python 3.10 | Request Validation & Robust Logs |
+
+## ⚙️ Deployment Protocol
+
+### 1. Environment Configuration
+Establish a `.env` secure link in the root directory:
+```env
+# MISSION CRITICAL: API KEYS
+GEMINI_API_KEY=your_secure_credential_here
+VITE_API_BASE=/api
+```
+
+### 2. Frontend Initialization
+```bash
+npm install
+npm run dev
+```
+
+### 3. Backend Command Activation
+```bash
+cd backend
+pip install -r requirements.txt
+python main.py
+```
+
+## 📋 Operational Integrity
+This system is designed for high-stress environments. Log files are generated at `backend/aidro_mission.log` for post-operational audit and accountability.
+
+---
+*FOR AUTHORIZED HUMANITARIAN USE ONLY. SECURING THE HORIZON.*

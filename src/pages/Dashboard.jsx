@@ -1,121 +1,207 @@
-import React, { useEffect, useState } from 'react';
-import { Activity, AlertCircle, Droplets, MapPin, Users } from 'lucide-react';
-import { ApiService } from '../services/ApiService';
-import './Dashboard.css';
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+    Shield, AlertTriangle, Activity, Zap, Globe, RefreshCcw, 
+    Search, Map, Users, CloudLightning, Navigation2, Info, Sun, CloudRain
+} from 'lucide-react';
+import { Line } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+} from 'chart.js';
 
-/**
- * AIDRO Admin Dashboard Page
- */
-const Dashboard = () => {
-  const [liveStats, setLiveStats] = useState({ total_affected: '0', critical_zones: '0' });
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const stats = await ApiService.getDashboardStats();
-      setLiveStats({
-        total_affected: stats.total_affected.toLocaleString(),
-        critical_zones: stats.critical_zones.toString()
-      });
+const Dashboard = ({ onImmediateSOS }) => {
+    const [allAlerts, setAllAlerts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [safetyScore, setSafetyScore] = useState(85);
+    const [stats, setStats] = useState({
+        total_tracked: 0,
+        last_sync: new Date().toLocaleTimeString(),
+        pending_sync: 0
+    });
+
+    const checkPendingSync = () => {
+        const pending = JSON.parse(localStorage.getItem('AIDRO_PENDING_SOS') || '[]');
+        setStats(prev => ({ ...prev, pending_sync: pending.length }));
     };
-    fetchData();
-  }, []);
 
-  const stats = [
-    { label: 'Total Critical', value: liveStats.critical_zones, icon: <AlertCircle className="text-red-500" />, trend: '+3 since 1h' },
-    { label: 'People Safe', value: liveStats.total_affected, icon: <Users className="text-blue-500" />, trend: '94% targeted' },
-    { label: 'Resource Efficiency', value: '88%', icon: <Activity className="text-green-500" />, trend: '+12% optimized' },
-    { label: 'Water Units Level', value: '42%', icon: <Droplets className="text-cyan-500" />, trend: 'Critical - Low' },
-  ];
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+            const data = await response.json();
+            
+            const processed = data.features.map(feature => ({
+                id: feature.id,
+                title: feature.properties.title,
+                mag: feature.properties.mag,
+                severity: feature.properties.mag >= 5.0 ? 'Urgent' : 'Normal',
+                timestamp: new Date(feature.properties.time).toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                }),
+                location: feature.properties.place,
+            }));
 
-  return (
-    <div className="dashboard-root">
-      <header className="dash-header">
-        <div className="dash-welcome">
-          <h1>Command Center <span className="text-primary">AIDRO v2.0</span></h1>
-          <p>AI prioritized response engine is active.</p>
+            setAllAlerts(processed);
+            setStats(prev => ({ ...prev, total_tracked: data.metadata.count, last_sync: new Date().toLocaleTimeString() }));
+            
+            if (processed.length > 0) {
+                const impact = processed[0].mag; 
+                setSafetyScore(Math.max(0, Math.floor(100 - (impact * 10))));
+            }
+        } catch (error) {
+            console.error("Data sync paused.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+        checkPendingSync();
+        window.addEventListener('online', checkPendingSync);
+        return () => window.removeEventListener('online', checkPendingSync);
+    }, []);
+
+    const filteredAlerts = useMemo(() => {
+        return allAlerts.filter(a => a.location.toLowerCase().includes(searchQuery.toLowerCase()));
+    }, [allAlerts, searchQuery]);
+
+    const chartData = useMemo(() => ({
+        labels: filteredAlerts.length > 0 ? filteredAlerts.slice(0, 10).map(a => a.timestamp.split(',')[0]).reverse() : ['...'],
+        datasets: [{
+            label: 'Activity Intensity',
+            data: filteredAlerts.length > 0 ? filteredAlerts.slice(0, 10).map(a => a.mag).reverse() : [0],
+            borderColor: '#1a73e8',
+            backgroundColor: 'rgba(26, 115, 232, 0.05)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 0
+        }]
+    }), [filteredAlerts]);
+
+    return (
+        <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            {/* HERO_SOS_SECTION */}
+            <div className="sundar-card" style={{ background: '#d93025', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: 'none' }}>
+                <div style={{ flex: 1 }}>
+                    <h2 style={{ color: '#fff', fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 800 }}>Need assistance?</h2>
+                    <p style={{ opacity: 0.9, fontSize: '1.1rem' }}>Our team and AI are standing by to help you stay safe.</p>
+                </div>
+                <button 
+                    onClick={onImmediateSOS}
+                    style={{ background: '#fff', color: '#d93025', border: 'none', padding: '1rem 2.5rem', borderRadius: '100px', fontSize: '1.1rem', fontWeight: 700, cursor: 'pointer' }}
+                >
+                    Request Help
+                </button>
+            </div>
+
+            {/* QUICK_STATS_GRID */}
+            <div className="sundar-grid">
+                <div className="sundar-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Current Safety Score</h3>
+                        <Info size={16} color="var(--text-muted)" />
+                    </div>
+                    <div style={{ fontSize: '3.5rem', fontWeight: 800, color: safetyScore > 70 ? 'var(--success)' : 'var(--warning)' }}>
+                        {safetyScore}%
+                    </div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                        Based on local seismic and weather data.
+                    </p>
+                    <div style={{ marginTop: '1.5rem', height: '8px', background: '#f1f3f4', borderRadius: '100px', overflow: 'hidden' }}>
+                        <div style={{ width: `${safetyScore}%`, height: '100%', background: safetyScore > 70 ? 'var(--success)' : 'var(--warning)', transition: 'width 1s ease' }}></div>
+                    </div>
+                </div>
+
+                <div className="sundar-card">
+                    <h3 style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Weather Forecast</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', height: '100%', alignItems: 'center' }}>
+                        
+                        {/* YESTERDAY */}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Yesterday</div>
+                            <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: '#fff7e0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Sun size={24} color="#f9ab00" />
+                            </div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>28°C</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Clear Skies</div>
+                        </div>
+
+                        {/* TODAY */}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px', transform: 'scale(1.1)' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 800 }}>Today</div>
+                            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: '#e8f0fe', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(26, 115, 232, 0.2)' }}>
+                                <CloudRain size={28} color="#1a73e8" />
+                            </div>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--primary)' }}>22°C</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-main)', fontWeight: 600 }}>Heavy Rain</div>
+                        </div>
+
+                        {/* TOMORROW */}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Tomorrow</div>
+                            <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: '#fce8e6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <CloudLightning size={24} color="#d93025" />
+                            </div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>20°C</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Storms</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {/* ACTIVITY_SECTION */}
+            <div className="sundar-grid" style={{ gridTemplateColumns: '2fr 1fr' }}>
+                <div className="sundar-card">
+                    <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Recent Ground Activity</h3>
+                    <div style={{ height: '300px' }}>
+                        <Line 
+                            data={chartData} 
+                            options={{ 
+                                maintainAspectRatio: false, 
+                                scales: { 
+                                    y: { beginAtZero: true, grid: { color: '#f1f3f4' }, border: { display: false } }, 
+                                    x: { grid: { display: false }, border: { display: false } } 
+                                }, 
+                                plugins: { legend: { display: false } } 
+                            }} 
+                        />
+                    </div>
+                </div>
+
+                <div className="sundar-card">
+                    <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Safe Zones</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {loading ? (
+                            <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>Updating...</div>
+                        ) : (
+                            allAlerts.slice(0, 4).map(alert => (
+                                <div key={alert.id} style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+                                    <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{alert.location}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                        {alert.severity === 'Urgent' ? '⚠️ Precaution Advised' : '✅ Stable Status'}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div className="dash-actions">
-          <button className="btn-secondary">Export Report</button>
-          <button className="btn-primary">Deploy Strategic Unit</button>
-        </div>
-      </header>
-
-      <section className="stats-grid">
-        {stats.map((stat, i) => (
-          <div key={i} className="glass-stat-card">
-            <div className="stat-header">
-              <span className="stat-icon">{stat.icon}</span>
-              <span className="stat-trend">{stat.trend}</span>
-            </div>
-            <div className="stat-main">
-              <h3>{stat.value}</h3>
-              <p>{stat.label}</p>
-            </div>
-            <div className="stat-progress-bg">
-              <div className="stat-progress-bar" style={{width: '70%'}}></div>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <main className="dash-content-grid">
-        <div className="center-map-view glass-card">
-          <div className="card-header">
-            <h3>Tactical Impact Map</h3>
-            <div className="map-legend">
-              <span className="badge high">High Risk</span>
-              <span className="badge medium">Moderate</span>
-            </div>
-          </div>
-          <div className="map-placeholder-container">
-            <div className="map-overlay">
-              <div className="map-info-toast">
-                <strong>Sector 7 - Submersion Risk</strong>
-                <p>AI Priority Score: 98.4</p>
-              </div>
-            </div>
-            <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?q=80&w=2033&auto=format&fit=crop" alt="Global Map View" />
-          </div>
-        </div>
-
-        <aside className="notification-panel glass-card">
-          <h3>Real-time Alerts</h3>
-          <div className="alert-list">
-            <AlertItem 
-              type="Critical" 
-              location="Riverside A" 
-              message="Flash flooding reported. 40 families trapped."
-              time="2m ago"
-              score="94"
-            />
-            <AlertItem 
-              type="Warning" 
-              location="Industrial Sector" 
-              message="Leaking containment unit detected by sensors."
-              time="12m ago"
-              score="72"
-            />
-          </div>
-        </aside>
-      </main>
-    </div>
-  );
+    );
 };
-
-const AlertItem = ({ type, location, message, time, score }) => (
-  <div className={`alert-item-card ${type.toLowerCase()}`}>
-    <div className="alert-meta">
-      <span className="alert-type">{type}</span>
-      <span className="alert-time">{time}</span>
-    </div>
-    <div className="alert-body">
-      <strong>{location}</strong>
-      <p>{message}</p>
-    </div>
-    <div className="alert-footer">
-      <span className="ai-badge">Gemini Score: {score}</span>
-    </div>
-  </div>
-);
 
 export default Dashboard;

@@ -1,7 +1,8 @@
 :root {
   --nav-width: 280px;
-  --bg-dark: #050811;
-  --primary: #00d2ff;
+  --bg-dark: #020617;
+  --primary: #6366f1;
+  --accent: #0ea5e9;
 }
 
 * {
@@ -89,4 +90,28 @@ body {
   .nav-items button span { display: none; }
   .main-viewport { margin-left: 80px; width: calc(100% - 80px); }
   .nav-items button { justify-content: center; }
+}
+
+/* EXTREME_DARK_BATTERY_SAVER_PROTOCOL */
+.battery-saver {
+  --bg-dark: #000000 !important;
+  --primary: #f59e0b !important; /* Warning Orange */
+  --accent: #d97706 !important;
+  transition: none !important;
+}
+
+.battery-saver * {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.battery-saver .card-horizon {
+  background: #000 !important;
+  border: 1px solid #333 !important;
+}
+
+.battery-saver .pulse {
+  animation: none !important;
 }
