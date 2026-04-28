@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: npm install --include=dev
       - name: Build
-        run: npx vite build
+        run: node node_modules/vite/bin/vite.js build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
       - name: Setup Pages
