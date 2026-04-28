@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Send, ShieldAlert, Zap, Heart, Info, Wind, Activity, Mic } from 'lucide-react';
 
+import CONFIG from '../config/config';
+
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     { type: 'bot', text: "AIDRO MISSION INTELLIGENCE ACTIVE. I can provide survival protocols, psychological grounding, or resource localization. State your situation." }
@@ -23,7 +25,7 @@ const Chatbot = () => {
     setStatus("typing");
 
     try {
-      const res = await fetch('/api/chat', { 
+      const res = await fetch(`${CONFIG.API_BASE_URL}/chat`, { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 

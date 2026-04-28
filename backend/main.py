@@ -28,6 +28,7 @@ app = FastAPI(title="AIDRO Mission Control", version="9.0.2")
 # --- SECURITY CONFIGURATION ---
 ALLOWED_ORIGINS = [
     "http://localhost:5173", # Vite Dev
+    "https://NRXKARN.github.io", # GitHub Pages Production
     "https://aidro-guardian.web.app", # Production
     "https://aidro-sentinel.vercel.app" # Alternate Production
 ]
